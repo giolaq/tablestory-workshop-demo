@@ -2,7 +2,7 @@
 schema_version = 1
 
 [project]
-name = "Pocket Cinema"
+name = "TableStory"
 default_branch = "main"
 source_roots = ["demo-app"]
 protected_paths = [".github/workflows"]
@@ -10,7 +10,7 @@ protected_paths = [".github/workflows"]
 [environment]
 required_tools = ["git", "python3", "node"]
 setup = ["{python} -m pip install -r demo-app/requirements.txt"]
-ports = [5000]
+ports = [8347]
 
 [qa]
 test_roots = ["demo-app/tests", "demo-app/static/tests"]

@@ -7,6 +7,8 @@ API, My Cookbook and the TV rails endpoint.
 
 from __future__ import annotations
 
+import os
+
 from flask import Flask, abort, jsonify, render_template, request
 
 from cookbook import CookbookStore, UnknownRecipeError
@@ -15,6 +17,10 @@ from recipe_data import load_recipes
 from recipe_search import filter_recipes, total_minutes
 
 TAGLINE = "Good food, clearly told."
+
+# 8347 avoids the ports development tools habitually claim (3000, 5000, 5173,
+# 8000, 8080, ...). Override with PORT when even that is taken.
+DEFAULT_PORT = 8347
 NO_MATCHES = "No recipes found. Try another ingredient or dish."
 UNKNOWN_RECIPE = "Recipe not found"
 
@@ -139,4 +145,4 @@ def create_app(testing: bool = False) -> Flask:
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=int(os.environ.get("PORT", DEFAULT_PORT)))

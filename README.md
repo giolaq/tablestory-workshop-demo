@@ -22,14 +22,19 @@ python3 -m venv .venv
 .venv/bin/python demo-app/app.py
 ```
 
-The app listens on <http://127.0.0.1:5000>.
+The app listens on <http://127.0.0.1:8347>. Port 8347 stays clear of the ports
+development tools usually claim; set `PORT` to move it:
+
+```bash
+PORT=9500 .venv/bin/python demo-app/app.py
+```
 
 ## Open the two experiences
 
 | Experience | URL | Notes |
 | --- | --- | --- |
-| Mobile / desktop | <http://127.0.0.1:5000/> | Designed for a 375 px viewport upwards |
-| Television | <http://127.0.0.1:5000/?mode=tv> | Best at 1920×1080; also served automatically to TV browsers |
+| Mobile / desktop | <http://127.0.0.1:8347/> | Designed for a 375 px viewport upwards |
+| Television | <http://127.0.0.1:8347/?mode=tv> | Best at 1920×1080; also served automatically to TV browsers |
 
 Add `?mode=mobile` to force the phone layout on a television.
 
