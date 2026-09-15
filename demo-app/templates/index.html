@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>TableStory · {{ TAGLINE }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="TableStory home"><span aria-hidden="true">TS</span>TableStory</a>
+    <a class="topbar-link" href="/?mode=tv">TV mode</a>
+  </header>
+  <main>
+    <section class="hero">
+      <p class="eyebrow">{{ TAGLINE }}</p>
+      <h1>Find tonight's dish.</h1>
+      <p>Search {{ recipes|length }} everyday recipes by dish, ingredient or dietary need, then cook straight from the page.</p>
+    </section>
+    <label class="search">
+      <span aria-hidden="true">⌕</span>
+      <input id="search" type="search" placeholder="Search recipes or ingredients"
+             aria-label="Search recipes by dish, ingredient, category or dietary tag" autocomplete="off">
+    </label>
+    <div class="section-heading">
+      <h2>All recipes</h2>
+      <span id="count">{{ recipes|length }} recipes</span>
+    </div>
+    <section class="recipe-grid" id="recipe-grid" aria-live="polite">
+      {% for recipe in recipes %}
+      {% set saved = recipe.id in saved_ids %}
+      <article class="recipe-card"
+               data-search="{{ ([recipe.title, recipe.description, recipe.category] + recipe.dietary_tags + recipe.ingredients)|join(' ')|lower }}">
+        <a href="{{ url_for('detail', recipe_id=recipe.id) }}" aria-label="View the {{ recipe.title }} recipe">
+          <div class="dish-art" style="--art-a:{{ recipe.colors[0] }};--art-b:{{ recipe.colors[1] }}">
+            <span class="dish-initial" aria-hidden="true">{{ recipe.title[0] }}</span>
+            <span class="dish-name">{{ recipe.title }}</span>
+          </div>
+          <h3>{{ recipe.title }}</h3>
+          <p class="card-meta">{{ total_minutes(recipe) }} min · {{ recipe.difficulty }}</p>
+          <p class="card-tags">
+            <span class="tag tag-category">{{ recipe.category }}</span>
+            {% for tag in recipe.dietary_tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+          </p>
+        </a>
+        <button class="cookbook-toggle{% if saved %} saved{% endif %}"
+                type="button"
+                data-recipe-id="{{ recipe.id }}"
+                data-recipe-title="{{ recipe.title }}"
+                aria-pressed="{{ 'true' if saved else 'false' }}"
+                aria-label="{{ 'Remove' if saved else 'Add' }} {{ recipe.title }} {{ 'from' if saved else 'to' }} My Cookbook">
+          <span aria-hidden="true">{{ '✓' if saved else '+' }}</span>
+        </button>
+      </article>
+      {% endfor %}
+    </section>
+    <p class="empty" id="empty" hidden>{{ no_matches }}</p>
+  </main>
+  <nav class="tabbar" aria-label="Primary">
+    <a class="active" href="/" aria-current="page">Browse</a>
+    <a href="/api/cookbook">My Cookbook</a>
+    <a href="/?mode=tv">TV mode</a>
+  </nav>
+  <script type="module" src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

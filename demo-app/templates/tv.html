@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1920,initial-scale=1">
+  <title>TableStory on TV · {{ TAGLINE }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="tv">
+  <header class="tv-topbar">
+    <p class="brand tv-brand"><span aria-hidden="true">TS</span>TableStory</p>
+    <p class="tv-tagline">{{ TAGLINE }}</p>
+  </header>
+  <main class="tv-shell">
+    <h1 class="tv-title">Recipes for everyday cooking</h1>
+    <p class="tv-hint">Arrow keys move between recipes and rails · Enter opens a recipe</p>
+    {% for rail in rails %}
+    <section class="rail" data-rail="{{ loop.index0 }}" aria-labelledby="rail-{{ loop.index0 }}">
+      <h2 class="rail-name" id="rail-{{ loop.index0 }}">{{ rail.name }}</h2>
+      {% if rail.recipes %}
+      <ul class="rail-track" role="list">
+        {% for recipe in rail.recipes %}
+        <li>
+          <a class="tv-card" href="{{ url_for('detail', recipe_id=recipe.id, mode='tv') }}"
+             data-card="{{ loop.index0 }}" tabindex="-1"
+             aria-label="{{ recipe.title }} · {{ total_minutes(recipe) }} minutes · {{ recipe.difficulty }}">
+            <span class="dish-art tv-art" style="--art-a:{{ recipe.colors[0] }};--art-b:{{ recipe.colors[1] }}">
+              <span class="dish-initial" aria-hidden="true">{{ recipe.title[0] }}</span>
+              <span class="dish-name">{{ recipe.title }}</span>
+            </span>
+            <span class="tv-card-title">{{ recipe.title }}</span>
+            <span class="tv-card-meta">{{ total_minutes(recipe) }} min · {{ recipe.difficulty }}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="rail-empty">{{ rail.empty_state }}</p>
+      {% endif %}
+    </section>
+    {% endfor %}
+  </main>
+  <script type="module" src="{{ url_for('static', filename='tv.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ recipe.title }} · TableStory</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="detail-page">
+  <main class="detail-shell">
+    <a class="back" href="/">← Browse recipes</a>
+    <div class="detail-art dish-art" style="--art-a:{{ recipe.colors[0] }};--art-b:{{ recipe.colors[1] }}">
+      <span class="dish-initial" aria-hidden="true">{{ recipe.title[0] }}</span>
+      <span class="dish-name">{{ recipe.title }}</span>
+    </div>
+    <p class="eyebrow">{{ ([recipe.category] + recipe.dietary_tags)|join(' · ') }}</p>
+    <h1>{{ recipe.title }}</h1>
+    <p class="description">{{ recipe.description }}</p>
+    <dl class="facts">
+      <div><dt>Prep</dt><dd>{{ recipe.prep_minutes }} min</dd></div>
+      <div><dt>Cook</dt><dd>{{ recipe.cook_minutes }} min</dd></div>
+      <div><dt>Total time</dt><dd>{{ total_minutes(recipe) }} min</dd></div>
+      <div><dt>Difficulty</dt><dd>{{ recipe.difficulty }}</dd></div>
+      <div><dt>Serves</dt><dd>{{ recipe.servings }}</dd></div>
+    </dl>
+    <button class="primary cookbook-toggle{% if saved %} saved{% endif %}"
+            type="button"
+            data-recipe-id="{{ recipe.id }}"
+            data-recipe-title="{{ recipe.title }}"
+            aria-pressed="{{ 'true' if saved else 'false' }}"
+            aria-label="{{ 'Remove' if saved else 'Add' }} {{ recipe.title }} {{ 'from' if saved else 'to' }} My Cookbook">
+      {{ '✓ Saved in My Cookbook' if saved else '+ Add to My Cookbook' }}
+    </button>
+    <section class="ingredients">
+      <h2>Ingredients</h2>
+      <ul>
+        {% for ingredient in recipe.ingredients %}<li>{{ ingredient }}</li>{% endfor %}
+      </ul>
+    </section>
+    <section class="method">
+      <h2>Method</h2>
+      <ol>
+        {% for step in recipe.steps %}<li>{{ step }}</li>{% endfor %}
+      </ol>
+    </section>
+  </main>
+  <script type="module" src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
